@@ -35,6 +35,8 @@ function CourseDetailsPage() {
     }
   };
 
+  
+
   useEffect(() => {
     const getCourseDetails = async () => {
       try {

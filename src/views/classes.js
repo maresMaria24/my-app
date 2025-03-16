@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Navbar, Nav, Button, Modal, Form, FormControl } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,6 +20,7 @@ function Classes() {
   const [cursuri, setCursuri] = useState([]);
   const [editingCourseId, setEditingCourseId] = useState(null); // New state for editing course ID
   const [searchTerm, setSearchTerm] = useState(''); // State for search term
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const { id } = useParams(); 
 
   const getCursuriFromDatabase = async () => {
@@ -44,8 +47,63 @@ function Classes() {
     }
   }, [isLoggedIn, navigate]);
 
+  // Debounced Search Effect
+  useEffect(() => {
+    const debounceTimeout = setTimeout(() => {
+      const filtered = cursuri.filter((curs) =>
+        curs.nume.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        curs.descriere.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredCourses(filtered);
+      saveSearch(searchTerm, filtered); // Save the search after debouncing
+    }, 6000); // 500ms delay for debouncing
+
+    return () => clearTimeout(debounceTimeout); // Cleanup the timeout on component unmount or searchTerm change
+  }, [searchTerm, cursuri]); // The effect depends on searchTerm and cursuri
+
+  const saveSearch = async (query, matchedCourses) => {
+    // Verificăm dacă searchTerm este gol
+    if (!query.trim()) {
+        console.log('Termenul de căutare este gol, nu se trimite cererea.');
+        return; // Ieșim din funcție dacă termenul de căutare este gol
+    }
+    const courseIds = matchedCourses.map(course => course._id);
+
+    try {
+        const response = await fetch('http://localhost:3001/addSearch', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user: user._id,  // Id-ul utilizatorului
+                query: query,  // Căutarea efectuată
+                matched_courses: courseIds,  // Cursurile returnate
+                timestamp: new Date(),
+            }),
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Căutarea a fost salvată cu ID-ul:', result.insertedId);
+        } else {
+            console.error('Eroare la salvarea căutării:', response.status);
+        }
+    } catch (error) {
+        console.error('Eroare la trimiterea cererii de căutare:', error);
+    }
+};
+
+
   const handleHomeClick = () => {
     navigate('/Home');
+  };
+  const handleAuthClick = () => {
+    if (isLoggedIn) {
+      logout();
+    } else {
+      navigate('/login');
+    }
   };
 
   const handleListClick = () => {
@@ -147,13 +205,6 @@ function Classes() {
       console.error('ID-ul cursului este invalid.');
     }
   };
-  const handleAuthClick = () => {
-    if (isLoggedIn) {
-      logout();
-    } else {
-      navigate('/login');
-    }
-  };
 
   const handleEditCourse = (curs) => {
     setCourseName(curs.nume);
@@ -189,39 +240,40 @@ function Classes() {
     <Container>
       <Card className="my-4 card-custom">
         <Card.Body>
-        <Navbar expand="lg" className="navbar-custom">
-          <Container fluid>
-            <Navbar.Brand href="/home">BrainIT</Navbar.Brand>
-            <Navbar.Toggle aria-controls="navbarScroll" />
-            <Navbar.Collapse id="navbarScroll">
-            <Nav className="me-auto my-2 my-lg-0 navbar-nav-scroll" style={{ maxHeight: '100px' }}>
-              <Nav.Link className="nav-item nav-link" onClick={handleClassesClick}>Cursuri</Nav.Link>
-              {user && user.rol === 'admin' && (
-                <Nav.Link className="nav-item nav-link" onClick={handleListClick}>Cereri profesori</Nav.Link>
-              )}
-              <Nav.Link className="nav-item nav-link" onClick={handleForumClick}>Forum</Nav.Link>
-              <Nav.Link className="nav-item nav-link" onClick={handleProfileClick}>Profilul meu</Nav.Link>
-            </Nav>
-              <Form className="d-flex">
-                {isLoggedIn ? (
-                  <>
-                    <p className="my-auto me-3 dark">{user.utilizator}</p>
-                    <Button variant="outline-danger" onClick={handleAuthClick}>Logout</Button>
-                  </>
-                ) : (
-                  <Nav className="me-auto my-2 my-lg-0 navbar-nav-scroll" style={{ maxHeight: '100px' }}>
-                    <Nav.Link href="/login" active>Login</Nav.Link> 
-                  </Nav>
-                )}
-              </Form>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+          <Navbar expand="lg" className="navbar-custom">
+            <Container fluid>
+              <Navbar.Brand href="/home">BrainIT</Navbar.Brand>
+              <Navbar.Toggle aria-controls="navbarScroll" />
+              <Navbar.Collapse id="navbarScroll">
+                <Nav className="me-auto my-2 my-lg-0 navbar-nav-scroll" style={{ maxHeight: '100px' }}>
+                  <Nav.Link className="nav-item nav-link" onClick={handleClassesClick}>Cursuri</Nav.Link>
+                  {user && user.rol === 'admin' && (
+                    <Nav.Link className="nav-item nav-link" onClick={handleListClick}>Cereri profesori</Nav.Link>
+                  )}
+                  <Nav.Link className="nav-item nav-link" onClick={handleForumClick}>Forum</Nav.Link>
+                  <Nav.Link className="nav-item nav-link" onClick={handleProfileClick}>Profilul meu</Nav.Link>
+                </Nav>
+                <Form className="d-flex">
+                  {isLoggedIn ? (
+                    <>
+                      <p className="my-auto me-3 dark">{user.utilizator}</p>
+                      <Button variant="outline-danger" onClick={handleAuthClick}>Logout</Button>
+                    </>
+                  ) : (
+                    <Nav className="me-auto my-2 my-lg-0 navbar-nav-scroll" style={{ maxHeight: '100px' }}>
+                      <Nav.Link href="/login" active>Login</Nav.Link> 
+                    </Nav>
+                  )}
+                </Form>
+              </Navbar.Collapse>
+              
+            </Container>
+          </Navbar>
           <h1 className="mb-4">Cursurile mele</h1>
           <div className="d-flex mb-3">
-          {user && user.rol === 'admin' && (
-            <Button variant="primary button-custom" onClick={() => setShowModal(true)}>Adaugă Curs</Button>
-          )}
+            {user && user.rol === 'admin' && (
+              <Button variant="primary button-custom" onClick={() => setShowModal(true)}>Adaugă Curs</Button>
+            )}
             <Form className="ms-auto">
               <FormControl
                 type="search"
@@ -234,11 +286,7 @@ function Classes() {
             </Form>
           </div>
           <Row className="mt-4">
-            {cursuri
-              .filter((curs) =>
-                curs.nume.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                curs.descriere.toLowerCase().includes(searchTerm.toLowerCase())
-              )
+            {filteredCourses
               .map((curs, index) => (
                 <Col key={index} md={4} className="mb-4">
                   <Card className="card-custom">
@@ -267,7 +315,6 @@ function Classes() {
           </Row>
         </Card.Body>
       </Card>
-
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>{editingCourseId ? 'Modifică Curs' : 'Adaugă Curs Nou'}</Modal.Title>

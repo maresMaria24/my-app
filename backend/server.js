@@ -10,6 +10,7 @@
   const raspuns = require('./database/Routes/RaspunsRoute.js');
   const cont = require('./database/Routes/ContRoute.js');
   const email = require('./database/Routes/EmailRoute.js');
+  const search = require('./database/Routes/searchRoute.js')
   const bcrypt = require('bcryptjs');
   const jwt = require('jsonwebtoken');
   const nodemailer = require('nodemailer');
@@ -30,6 +31,7 @@
   app.use('',intrebare);
   app.use('',raspuns);
   app.use('',email);
+  app.use('',search);
 
 
   app.listen(PORT, () => {

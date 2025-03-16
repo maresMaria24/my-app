@@ -1,0 +1,11 @@
+{'_id': ObjectId('67d5ef0c535e4fac0d3a9c7d'), 'user': '6659b89a262fde1750874e1c', 'query': 'pyt', 'matched_courses': ['665b1d5766e9ff7b4fcc3a13', '665b1d3966e9ff7b4fcc3a12'], 'timestamp': '2025-03-15T21:20:11.485Z'}
+{'_id': ObjectId('67d6aae207f5e614beb7b5e6'), 'user': '6659b89a262fde1750874e1c', 'query': 'o', 'matched_courses': ['665b1d5766e9ff7b4fcc3a13', '665b1d3966e9ff7b4fcc3a12'], 'timestamp': '2025-03-16T10:41:37.642Z'}
+{'_id': ObjectId('67d6aae307f5e614beb7b5e7'), 'user': '6659b89a262fde1750874e1c', 'query': 'p', 'matched_courses': ['665b1d5766e9ff7b4fcc3a13', '665b1d3966e9ff7b4fcc3a12'], 'timestamp': '2025-03-16T10:41:39.323Z'}
+{'_id': ObjectId('67d6aae507f5e614beb7b5e8'), 'user': '6659b89a262fde1750874e1c', 'query': 'pach', 'matched_courses': ['665b1d5766e9ff7b4fcc3a13'], 'timestamp': '2025-03-16T10:41:40.641Z'}
+{'_id': ObjectId('67d6aae607f5e614beb7b5e9'), 'user': '6659b89a262fde1750874e1c', 'query': 'pache', 'matched_courses': ['665b1d5766e9ff7b4fcc3a13'], 'timestamp': '2025-03-16T10:41:41.825Z'}
+{'_id': ObjectId('67d6abb107f5e614beb7b5ea'), 'user': '6659b89a262fde1750874e1c', 'query': 'pachet', 'matched_courses': ['665b1d5766e9ff7b4fcc3a13'], 'timestamp': '2025-03-16T10:45:05.181Z'}
+{'_id': ObjectId('67d6abb307f5e614beb7b5eb'), 'user': '6659b89a262fde1750874e1c', 'query': 'pachete', 'matched_courses': ['665b1d5766e9ff7b4fcc3a13'], 'timestamp': '2025-03-16T10:45:07.075Z'}
+{'_id': ObjectId('67d6abde07f5e614beb7b5ec'), 'user': '6659b89a262fde1750874e1c', 'query': 'pachete', 'matched_courses': ['665b1d5766e9ff7b4fcc3a13'], 'timestamp': '2025-03-16T10:45:50.442Z'}
+{'_id': ObjectId('67d6ac0007f5e614beb7b5ed'), 'user': '6659b89a262fde1750874e1c', 'query': 'test', 'matched_courses': [], 'timestamp': '2025-03-16T10:46:23.727Z'}
+{'_id': ObjectId('67d6adfb07f5e614beb7b5ee'), 'user': '6659b89a262fde1750874e1c', 'query': 'jusj', 'matched_courses': [], 'timestamp': '2025-03-16T10:54:51.073Z'}
+{'_id': ObjectId('67d6ae1907f5e614beb7b5ef'), 'user': '6659b89a262fde1750874e1c', 'query': 'python', 'matched_courses': ['665b1d5766e9ff7b4fcc3a13', '665b1d3966e9ff7b4fcc3a12'], 'timestamp': '2025-03-16T10:55:20.868Z'}
