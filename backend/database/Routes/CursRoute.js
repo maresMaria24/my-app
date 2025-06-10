@@ -89,7 +89,6 @@ router.get('/curs/:id', async (req, res) => {
 router.get('/cursDis/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    // Folosim funcția getCurs pentru a obține cursul specificat prin id
     const cursObj = await getCurs(id);
     if (cursObj) {
       res.json(cursObj);
@@ -102,13 +101,10 @@ router.get('/cursDis/:id', async (req, res) => {
   }
 });
 
-
-
-// Ruta pentru obținerea cursurilor
 router.get('/getCursuri', async (req, res) => {
   try {
-    const cursuri = await getCursuri(); // Obținem cursurile din baza de date folosind funcția getCursuri din controllerul curs
-    res.json(cursuri); // Returnăm cursurile către client în format JSON
+    const cursuri = await getCursuri(); 
+    res.json(cursuri);
   } catch (error) {
     console.error('Eroare la obținerea cursurilor:', error);
     res.status(500).json({ message: 'Eroare la obținerea cursurilor.' });

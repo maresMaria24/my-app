@@ -5,7 +5,6 @@ const { actualizeazaIntrebareComentariu} = require('../Controller/intrebareContr
 const {ObjectId} = require('../mongodb.js');
 const Raspuns = require('../Model/raspuns.js');
 
-// Route to add a new answer
 router.post('/addRaspuns/:questionId', async (req, res) => {
     const { questionId } = req.params;
     const { text, autor, curs} = req.body;
@@ -20,9 +19,5 @@ router.post('/addRaspuns/:questionId', async (req, res) => {
       res.status(500).json({ error: 'An error occurred while adding the answer.' });
     }
   });
-
-// Route to get all answers for a specific question
-
-
 
 module.exports = router;

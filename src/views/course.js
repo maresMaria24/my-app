@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Card, Button, Modal, Form, Navbar, Nav } from 'react-bootstrap';
+import { Container, Card, Button, Modal, Form, Navbar, Nav, Row,Col } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
-import '../styles/styles.css'; // Importăm fișierul CSS
+import Quiz from './quiz';
+import '../styles/styles.css'; 
 
 function CourseDetailsPage() {
   const { id } = useParams();
@@ -16,8 +17,12 @@ function CourseDetailsPage() {
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [showModalQuiz, setShowModalQuiz] = useState(false);
+  const [selectedLessonId, setSelectedLessonId] = useState(null);
+
+
   const [editingLessonId, setEditingLessonId] = useState(null);
-  const { user,isLoggedIn,logout } = useAuth();
+  const { user,isLoggedIn,logout, userEmail } = useAuth();
   const navigate = useNavigate();
 
   const fetchLessons = async () => {
@@ -35,6 +40,14 @@ function CourseDetailsPage() {
     }
   };
 
+  
+  const handleAuthClick = () => {
+    if (isLoggedIn) {
+      logout();
+    } else {
+      navigate('/login');
+    }
+  };
   useEffect(() => {
     const getCourseDetails = async () => {
       try {
@@ -155,7 +168,6 @@ function CourseDetailsPage() {
       });
 
       if (response.ok) {
-        //fetchLessons();
         handleCloseModal();
       } else {
         console.error('Eroare la încărcarea lecției:', response.status);
@@ -167,17 +179,16 @@ function CourseDetailsPage() {
   const handleAssignCourse = async () => {
     try {
       const response = await fetch(`http://localhost:3001/asignare/${id}/${user._id}`, {
-        method: 'PUT', // sau 'POST', în funcție de implementarea backend-ului
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ cursId: id }) // trimite ID-ul cursului în corpul cererii
+        body: JSON.stringify({ cursId: id }) 
       });
       if (response.ok===200) {
         console.log('Cursul a fost asignat cu succes!');
         setMessage('Cursul a fost asignat cu succes!');
       } else {
-        //console.log('Cursul este deja asignat!');
         setMessage('Cursul este deja asignat!');
       }
     } catch (error) {
@@ -186,25 +197,48 @@ function CourseDetailsPage() {
     }
   };
   
-  
+  const handleNavigation = (path) => navigate(path);
 
   return (
     <Container>
-      <Navbar expand="lg" className="my-4 navbar-custom">
-        <Container>
-          <Navbar.Brand href="/Home">BrainIT</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto my-2 my-lg-0 navbar-nav-scroll" style={{ maxHeight: '100px' }}>
-              <Nav.Link className="nav-item nav-link" onClick={handleClassesClick}>Cursurile mele</Nav.Link>
-              {user.rol === 'admin' && (
-                <Nav.Link className="nav-item nav-link"onClick={handleListClick}>Lista profesori</Nav.Link>
-              )}
-              <Nav.Link className="nav-item nav-link" onClick={handleForumClick}>Forum</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+       <Row className="mt-4">
+        <Col>
+          <Card className="card-custom">
+            <Card.Body>
+               <Navbar expand="lg" >
+                      <Container fluid>
+                        <Navbar.Brand href="/home">BrainIT</Navbar.Brand>
+                        <Navbar.Toggle aria-controls="navbarScroll" />
+                        <Navbar.Collapse id="navbarScroll">
+                          <Nav className="me-auto my-2 my-lg-0 navbar-nav-scroll" style={{ maxHeight: '100px' }}>
+                            <Nav.Link onClick={() => handleNavigation('/Classes')}>Cursuri</Nav.Link>
+                            {user && user.rol === 'admin' && (
+                              <Nav.Link onClick={() => handleNavigation('/TeacherListPage')}>Cereri profesori</Nav.Link>
+                              
+                            )}
+                              {user && user.rol === 'admin' && (
+                              <Nav.Link onClick={() => handleNavigation('/QuizCheck')}>Teste</Nav.Link>
+                            )}
+                            <Nav.Link onClick={() => handleNavigation('/Forum')}>Forum</Nav.Link>
+                            <Nav.Link onClick={() => handleNavigation('/profile')}>Profilul meu</Nav.Link>
+                          </Nav>
+                          <div className="d-flex">
+                            {isLoggedIn ? (
+                              <>
+                                <p className="my-auto me-3">{userEmail}</p>
+                                <Button variant="outline-danger" onClick={handleAuthClick}>Logout</Button>
+                              </>
+                            ) : (
+                              <Nav.Link href="/login">Login</Nav.Link>
+                            )}
+                          </div>
+                        </Navbar.Collapse>
+                      </Container>
+                    </Navbar>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
       <Card className="my-4 card-custom">
         <Card.Body>
@@ -216,32 +250,43 @@ function CourseDetailsPage() {
               <Button variant="primary button-custom" onClick={handleAssignCourse}>
                 Asignează
               </Button>
-              {message && ( // Afișăm Alert doar dacă message nu este gol
+              {message && (
                 <p className="text-success">{message}</p>
               )}
               </div>
               </div>
-              <p>{courseDetails.descriere}</p>
-              <p>Nivel: {courseDetails.nivel}</p>
-              <p>Autor: {courseDetails.autor}</p>
-              <p>Categorie: {courseDetails.categorie}</p>
+                                   <div>
+                              <p className="mb-1">{courseDetails.descriere}</p>
+                              <p className="mb-1">Nivel: {courseDetails.nivel}</p>
+                              <p className="mb-1">Autor: {courseDetails.autor}</p>
+                              <p className="mb-1">Categorie: {courseDetails.categorie}</p>
+                            </div>
               <hr />
               {(user && (user.rol === 'admin' || user.rol === 'profesor')) && (
                 <Button variant="primary button-custom" onClick={() => setShowModal(true)}>
                   <FontAwesomeIcon icon={faPlus} />
                   Încarcă Lecție
                 </Button>
+                
               )}
+              
             </div>
           ) : (
             <p>Se încarcă detaliile cursului...</p>
           )}
         </Card.Body>
       </Card>
-
       <Card className="my-4 card-custom">
         <Card.Body>
-          <h2>Lecții</h2>
+                    <div className="my-4 d-flex justify-content-between align-items-center">
+            <h2>Lecții</h2>
+            <Button variant="success" onClick={() => setShowModalQuiz(true)}>
+        Take Quiz
+      </Button>
+
+      <Quiz isOpen={showModalQuiz} onClose={() => setShowModalQuiz(false)} lessons={lessons} />
+
+          </div>
           {loading ? (
             <p>Se încarcă lecțiile...</p>
           ) :  lessons && lessons.length > 0 ? (

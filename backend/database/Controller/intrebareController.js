@@ -5,7 +5,6 @@ const adaugaIntrebare = async function (intrebare) {
   let client;
   try {
     client = await connectToDatabase();
-    // Adăugăm întrebarea în baza de date și obținem ID-ul întrebării adăugate
     const insertedIntrebare = await insertDocument(client, 'intrebari', intrebare);
     return insertedIntrebare;
   } catch (error) {
@@ -92,22 +91,16 @@ async function stergeIntrebare(id) {
   let client;
   try {
     client = await connectToDatabase();
-    const filter = { _id: new ObjectId(id) }; // Convertim id-ul într-un obiect ObjectId
-    
-    // Obținem întrebarea pentru a accesa lista de comentarii asociate
+    const filter = { _id: new ObjectId(id) }; 
     const intrebareCollection = getCollection(client, 'intrebari');
     const intrebare = await intrebareCollection.findOne(filter);
     
-    // Verificăm dacă întrebarea există
     if (intrebare) {
-      // Ștergem comentariile asociate întrebării
       const comentariiIds = intrebare.comentarii.map(comentariuId => new ObjectId(comentariuId)); // Convertim fiecare ID în ObjectId
       const comentariiFilter = { _id: { $in: comentariiIds } };
       await deleteMultipleDocuments(client, 'comentarii', comentariiFilter);
       console.log('Comentariile asociate întrebării au fost șterse din baza de date.');
     }
-
-    // Ștergem întrebarea din colecția "intrebari"
     const result = await deleteDocument(client, 'intrebari', filter);
     console.log('Întrebarea a fost ștersă din baza de date.');
     return result;

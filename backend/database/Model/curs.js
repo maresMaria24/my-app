@@ -4,11 +4,10 @@ class Curs {
     this.descriere = descriere;
     this.nivel = nivel;
     this.autor = autor;
-    this.lectii = lectii; // Adăugăm câmpul pentru lista de lecții
+    this.lectii = lectii; 
     this.categorie = categorie;
   }
 
-  // Metodă pentru a afișa detalii despre curs
   afiseazaDetalii() {
     console.log(`Curs: ${this.nume}`);
     console.log(`Descriere: ${this.descriere}`);

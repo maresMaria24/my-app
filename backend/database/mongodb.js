@@ -1,7 +1,7 @@
 
 const { MongoClient, ObjectId } = require('mongodb');
 
-const uri = "mongodb+srv://maresmaria21:vsNcu9JifDcA6sl1@brainit.iuj2zxy.mongodb.net/?retryWrites=true&w=majority&appName=BrainIT";
+const uri = "mongodb+srv://maria:maria22@brainit.iuj2zxy.mongodb.net/?retryWrites=true&w=majority&appName=BrainIT";
 
 async function connectToDatabase() {
   const client = new MongoClient(uri, {
@@ -10,7 +10,6 @@ async function connectToDatabase() {
 
   try {
     await client.connect();
-    console.log("Conexiunea la baza de date a fost stabilită cu succes!");
     return client;
   } catch (error) {
     console.error("Eroare la conectarea la baza de date:", error);
@@ -18,23 +17,19 @@ async function connectToDatabase() {
   }
 }
 
-// Funcție pentru a închide conexiunea la baza de date
 async function closeDatabaseConnection(client) {
   try {
     await client.close();
-    console.log("Conexiunea la baza de date a fost închisă cu succes!");
   } catch (error) {
     console.error("Eroare la închiderea conexiunii la baza de date:", error);
     throw error;
   }
 }
 
-// Funcție pentru a obține o referință la o anumită colecție
 function getCollection(client, collectionName) {
   return client.db().collection(collectionName);
 }
 
-// Funcție pentru a insera un document într-o colecție
 async function insertDocument(client, collectionName, document) {
   try {
     const collection = getCollection(client, collectionName);
@@ -47,7 +42,6 @@ async function insertDocument(client, collectionName, document) {
   }
 }
 
-// Funcție pentru a actualiza un document într-o colecție
 async function updateDocument(client, collectionName, filter, update) {
   try {
     const collection = getCollection(client, collectionName);
@@ -60,7 +54,6 @@ async function updateDocument(client, collectionName, filter, update) {
   }
 }
 
-// Funcție pentru a șterge un document dintr-o colecție
 async function deleteDocument(client, collectionName, filter) {
   try {
     const collection = getCollection(client, collectionName);
@@ -85,8 +78,6 @@ async function deleteMultipleDocuments(client, collectionName, filter) {
   }
 }
 
-
-// Funcție pentru a căuta documente într-o colecție bazat pe un criteriu specific
 async function searchDocument(client, collectionName, query) {
   try {
     const collection = getCollection(client, collectionName);

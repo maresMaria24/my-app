@@ -46,12 +46,10 @@ async function stergeRaspuns(id) {
   try {
     client = await connectToDatabase();
 
-    // Șterge documentul din colecția 'raspunsuri'
     const filter = { _id: new ObjectId(id) };
     const result = await deleteDocument(client, 'raspunsuri', filter);
     console.log(result);
 
-    // Șterge ID-ul raspunsului din array-ul 'raspunsuri' din colecția 'intrebari'
     const filterIntrebari = { raspunsuri: new ObjectId(id) };
     const updateIntrebari = { $pull: { raspunsuri: new ObjectId(id) } };
     const resultIntrebari = await updateDocument(client, 'intrebari', filterIntrebari, updateIntrebari);

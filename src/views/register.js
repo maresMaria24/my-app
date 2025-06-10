@@ -65,7 +65,7 @@ function Register() {
                 <Col sm={6}>
                   <h1>Pagina de inregistrare</h1>
                   <p>Completeaza formularul de mai jos:</p>
-                  {!submitted ? ( // Afisam input-urile doar daca formularul nu a fost trimis
+                  {!submitted ? ( 
                     <Form onSubmit={handleSubmit}>
                       <Form.Group controlId="formBasicUsername">
                         <Form.Label>Nume utilizator</Form.Label>

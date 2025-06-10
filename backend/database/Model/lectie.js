@@ -6,7 +6,6 @@ class Lectie {
       this.articole = articole;
     }
   
-    // Metodă pentru a afișa detalii despre lecție
     afiseazaDetalii() {
       console.log(`Titlu: ${this.titlu}`);
       console.log(`Continut: ${this.continut}`);

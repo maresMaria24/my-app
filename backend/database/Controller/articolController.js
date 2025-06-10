@@ -1,4 +1,3 @@
-// articolController.js
 const { connectToDatabase, closeDatabaseConnection, insertDocument, updateDocument, deleteDocument ,ObjectId, searchDocument} = require('../mongodb.js');
 const {actualizeazaLectieArticol} = require('../Controller/lectieController.js');
 
@@ -50,12 +49,10 @@ async function stergeArticol(id) {
   try {
     client = await connectToDatabase();
 
-    // Șterge documentul din colecția 'articole'
     const filter = { _id: new ObjectId(id) };
     const result = await deleteDocument(client, 'articole', filter);
     console.log(result);
 
-    // Șterge ID-ul articolului din array-ul 'articole' din colecția 'lectii'
     const filterLectii = { articole: new ObjectId(id) };
     const updateLectii = { $pull: { articole: new ObjectId(id) } };
     const resultLectii = await updateDocument(client, 'lectii', filterLectii, updateLectii);

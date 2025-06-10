@@ -10,16 +10,15 @@
   const raspuns = require('./database/Routes/RaspunsRoute.js');
   const cont = require('./database/Routes/ContRoute.js');
   const email = require('./database/Routes/EmailRoute.js');
+  const search = require('./database/Routes/searchRoute.js')
+  const ai = require('./database/Routes/AIRoute.js');
   const bcrypt = require('bcryptjs');
   const jwt = require('jsonwebtoken');
   const nodemailer = require('nodemailer');
   const bodyParser = require('body-parser');
   const PORT = config.PORT || 3001;
 
-  const { secret } = require('./config.js'); // Secretul utilizat pentru a semna token-ul JWT
-
-
-  // Utilizarea middleware-ului express.json() înainte de rutare
+  const { secret } = require('./config.js');
   app.use(express.json());
   app.use(cors());
   app.use('',curs);
@@ -30,6 +29,8 @@
   app.use('',intrebare);
   app.use('',raspuns);
   app.use('',email);
+  app.use('',search);
+  app.use('', ai);
 
 
   app.listen(PORT, () => {
