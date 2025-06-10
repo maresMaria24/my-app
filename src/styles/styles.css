@@ -15,13 +15,103 @@ body {
     color: #2c3e50 !important; /* Text de culoare albastru-gri închis */
   }
 
-  .interactive-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* .interactive-card { */
+    /* transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
   }
   
   .interactive-card:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .recommended-card {
+    flex: 0 0 auto;
+    width: 260px;
+    min-height: 200px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  
+  .recommended-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  } */
+  
+  .scroll-button {
+    position: absolute;
+    top: 40%;
+    z-index: 100;
+    border: none;
+    font-size: 1.5rem;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .scroll-button.left {
+    left: 0;
+    transform: translateX(-50%);
+  }
+  
+  .scroll-button.right {
+    right: 0;
+    transform: translateX(50%);
+  }
+  
+  .truncate-description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .scroll-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 1rem 2rem;
+    gap: 1rem;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .scroll-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+  .recommended-card {
+    flex: 0 0 auto;
+    width: 200px;            /* redus de la 260px */
+    min-height: 160px;       /* redus de la 200px */
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    background-color: #fff;
+  }
+  
+  .recommended-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+  }
+  
+  .recommended-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .recommended-card .card-text {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .truncate-description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   

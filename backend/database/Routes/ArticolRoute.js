@@ -15,7 +15,6 @@ router.post('/articol/:id', async (req, res) => {
         };
         const newArticol= await adaugaArticol(articol, id);
 
-        //const articoleLectie = await cautaArticoleLectie(id);
         res.status(200).json({newArticol});
     } catch (err) {
         console.error('Eroare la adăugarea articolului:', err.message);

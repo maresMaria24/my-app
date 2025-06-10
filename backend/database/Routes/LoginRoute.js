@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { secret } = require('../../config.js'); // Secretul utilizat pentru a semna token-ul JWT
+const { secret } = require('../../config.js');
 const User = require('../Controller/contController.js');
 
 router.post('/Login', async (req, res) => {
@@ -26,7 +26,6 @@ router.post('/Login', async (req, res) => {
       return res.status(401).json({ message: 'Parolă incorectă.' });
     }
 
-    // Dacă email-ul și parola sunt corecte, se poate genera un token JWT și se poate trimite înapoi la client
     const token = jwt.sign({ email: user.email, rol: user.rol }, secret, { expiresIn: '1h' });
     res.status(200).json({ token, user });
   } catch (error) {

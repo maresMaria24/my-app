@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { adaugaIntrebare, actualizeazaIntrebare, stergeIntrebare, getIntrebari, getIntrebare, cautaComentariiIntrebare, actualizeazaIntrebareComentariu } = require('../Controller/intrebareController');
 const Intrebare = require('../Model/intrebare.js');
-// Route to get all questions
 router.get('/getIntrebari', async (req, res) => {
   try {
     const questions = await getIntrebari();
@@ -13,7 +12,6 @@ router.get('/getIntrebari', async (req, res) => {
   }
 });
 
-// Route to get a specific question and its comments
 router.get('/getIntrebare/:id', async (req, res) => {
   const { id } = req.params;
   console.log(id);
@@ -39,7 +37,6 @@ router.get('/getRaspunsuri/:id', async (req, res) => {
   });
 
 
-// Route to add a new question
 router.post('/addIntrebare', async (req, res) => {
   const { titlu, descriere, autor, cursId, comentarii } = req.body;
   const newQuestion = new Intrebare(titlu, descriere, autor,cursId, comentarii, new Date());
@@ -53,7 +50,6 @@ router.post('/addIntrebare', async (req, res) => {
   }
 });
 
-// Route to update a question
 router.put('/updateIntrebare/:id', async (req, res) => {
   const questionId = req.params.id;
   const updatedData = req.body;
@@ -67,7 +63,6 @@ router.put('/updateIntrebare/:id', async (req, res) => {
   }
 });
 
-// Route to delete a question
 router.delete('/deleteIntrebare/:id', async (req, res) => {
   const questionId = req.params.id;
   

@@ -5,11 +5,11 @@ import { useAuth } from '../AuthContext';
 import JoditEditor from "jodit-react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
-import '../styles/styles.css'; // Import the styles
+import '../styles/styles.css'; 
 
 function LecturePage() {
   const navigate = useNavigate();
-  const { isLoggedIn, logout, user } = useAuth();
+  const { isLoggedIn, logout, user, userEmail } = useAuth();
   const { id } = useParams();
 
   const [titlu, setLessonTitle] = useState('');
@@ -175,59 +175,64 @@ function LecturePage() {
   useEffect(() => {
     fetchLesson();
   }, []);
-
+  const handleNavigation = (path) => navigate(path);
   return (
     <Container>
       <Row className="mt-4">
         <Col>
           <Card className="card-custom">
             <Card.Body>
-            <Navbar expand="lg" className="navbar-custom">
-                <Container fluid>
-                  <Navbar.Brand href="/home">BrainIT</Navbar.Brand>
-                  <Navbar.Toggle aria-controls="navbarScroll" />
-                  <Navbar.Collapse id="navbarScroll">
-                  <Nav className="me-auto my-2 my-lg-0 navbar-nav-scroll" style={{ maxHeight: '100px' }}>
-                    <Nav.Link className="nav-item nav-link" onClick={handleClassesClick}>Cursuri</Nav.Link>
-                    {user.rol === 'admin' && (
-                      <Nav.Link className="nav-item nav-link"onClick={handleListClick}>Cereri profesori</Nav.Link>
-                    )}
-                    <Nav.Link className="nav-item nav-link" onClick={handleForumClick}>Forum</Nav.Link>
-                    <Nav.Link className="nav-item nav-link" onClick={handleProfileClick}>Profilul meu</Nav.Link>
-                  </Nav>
-                    <Form className="d-flex">
-                      {isLoggedIn ? (
-                        <>
-                          <p className="my-auto me-3">{user.email}</p>
-                          <Button variant="outline-danger" onClick={handleAuthClick}>Logout</Button>
-                        </>
-                      ) : (
+             <Navbar expand="lg" >
+                    <Container fluid>
+                      <Navbar.Brand href="/home">BrainIT</Navbar.Brand>
+                      <Navbar.Toggle aria-controls="navbarScroll" />
+                      <Navbar.Collapse id="navbarScroll">
                         <Nav className="me-auto my-2 my-lg-0 navbar-nav-scroll" style={{ maxHeight: '100px' }}>
-                          <Nav.Link href="/login" active>Login</Nav.Link> 
+                          <Nav.Link onClick={() => handleNavigation('/Classes')}>Cursuri</Nav.Link>
+                          {user && user.rol === 'admin' && (
+                            <Nav.Link onClick={() => handleNavigation('/TeacherListPage')}>Cereri profesori</Nav.Link>
+                            
+                          )}
+                            {user && user.rol === 'admin' && (
+                            <Nav.Link onClick={() => handleNavigation('/QuizCheck')}>Teste</Nav.Link>
+                          )}
+                          <Nav.Link onClick={() => handleNavigation('/Forum')}>Forum</Nav.Link>
+                          <Nav.Link onClick={() => handleNavigation('/profile')}>Profilul meu</Nav.Link>
                         </Nav>
-                      )}
-                    </Form>
-                  </Navbar.Collapse>
-                </Container>
-              </Navbar>
+                        <div className="d-flex">
+                          {isLoggedIn ? (
+                            <>
+                              <p className="my-auto me-3">{userEmail}</p>
+                              <Button variant="outline-danger" onClick={handleAuthClick}>Logout</Button>
+                            </>
+                          ) : (
+                            <Nav.Link href="/login">Login</Nav.Link>
+                          )}
+                        </div>
+                      </Navbar.Collapse>
+                    </Container>
+                  </Navbar>
             </Card.Body>
           </Card>
         </Col>
       </Row>
       <Card className="my-4 card-custom">
         <Card.Body>
-          <h1>Detalii Lecție</h1>
-          <div><hr></hr>
+          
+          <div>
             <h2>{titlu}</h2>
           </div>
           <p>{continut}</p>
-          <hr />
           {(user && (user.rol === 'admin' || user.rol === 'profesor')) && (
+          <>
+            <hr />
             <Button variant="primary button-custom" onClick={() => setShowAddForm(true)}>
               <FontAwesomeIcon icon={faPlus} />
               Încarcă Articol
             </Button>
-          )}
+          </>
+        )}
+
         </Card.Body>
       </Card>
 
@@ -264,7 +269,7 @@ function LecturePage() {
       )}
 
       {Array.isArray(articoleLectie) && articoleLectie.map((articol) => (
-        <Card key={articol._id} className="my-4 card-custom">
+        <Card key={articol._id} className="my-4 card-custom card-custom-hover">
           <Card.Body>
             <h5>{articol.titlu}</h5>
             <div dangerouslySetInnerHTML={{ __html: articol.continut }}></div>

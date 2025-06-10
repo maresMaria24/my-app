@@ -13,7 +13,7 @@ function Discussion() {
   const [course, setCourseDetails] = useState(null);
   const [newComment, setNewComment] = useState('');
   const [showCommentInput, setShowCommentInput] = useState(false);
-
+  const handleNavigation = (path) => navigate(path);
   useEffect(() => {
     if (!isLoggedIn) {
       navigate('/login');
@@ -80,7 +80,7 @@ function Discussion() {
       });
 
       if (response.ok) {
-        getQuestionAndComments(); // Refresh comments after adding a new one
+        getQuestionAndComments(); 
         setNewComment('');
         setShowCommentInput(false);
       } else {
@@ -92,14 +92,14 @@ function Discussion() {
   };
 
   if (!isLoggedIn) {
-    return null; // Or a loading spinner, or a message, etc.
+    return null; 
   }
 
   return (
     <Container className="discussion-page">
       <Card className="my-4 card-custom">
         <Card.Body>
-          <Navbar expand="lg" className="navbar-custom">
+          <Navbar expand="lg" >
             <Container fluid>
               <Navbar.Brand href="/home">BrainIT</Navbar.Brand>
               <Navbar.Toggle aria-controls="navbarScroll" />

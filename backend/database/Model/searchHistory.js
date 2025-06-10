@@ -7,7 +7,6 @@ class searchHistory {
      
     }
   
-    // Metodă pentru a afișa detalii despre curs
     afiseazaDetalii() {
       console.log('User ', `${this.user}`);
     }

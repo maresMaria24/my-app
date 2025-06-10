@@ -17,7 +17,6 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  // Logică pentru autentificare
 };
 
 module.exports = { register, login };

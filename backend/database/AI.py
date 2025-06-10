@@ -1,58 +1,62 @@
 import pymongo
 import pandas as pd
+from bson import ObjectId
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from fastapi import FastAPI
+from typing import List
+import os
 
-uri = "mongodb+srv://maresmaria21:vsNcu9JifDcA6sl1@brainit.iuj2zxy.mongodb.net/?retryWrites=true&w=majority&appName=BrainIT"
+uri = "mongodb+srv://maria:maria22@brainit.iuj2zxy.mongodb.net/?retryWrites=true&w=majority&appName=BrainIT"
 client = pymongo.MongoClient(uri, tls=True, tlsAllowInvalidCertificates=True)
 db = client["BrainIT"]
 
-searches_collection = db["cautari"]
+conti_collection = db["conti"]
 courses_collection = db["cursuri"]
 
-def recomanda_cursuri_pentru_user(user_id, top_n=5):
-    searches = list(searches_collection.find({"user": user_id}))
-    df_searches = pd.DataFrame(searches)
+app = FastAPI()
 
-    if df_searches.empty:
-        return ["Nu există căutări pentru acest utilizator."]
+def recomanda_top_cursuri(user_id: str, top_n: int = 3) -> List[str]:
+    user = conti_collection.find_one({"_id": ObjectId(user_id)}, {"cursuri": 1})
+    if not user or "cursuri" not in user or not user["cursuri"]:
+        return []
 
-    df_searches["query"] = df_searches["query"].fillna("")
-    df_searches["matched_courses"] = df_searches["matched_courses"].apply(lambda x: x if isinstance(x, list) else [])
+    cursuri_asignate_ids = [ObjectId(c) for c in user["cursuri"]]
 
-    courses = list(courses_collection.find({}, {"_id": 1, "nume": 1, "descriere": 1}))
-    df_courses = pd.DataFrame(courses)
-    
-    if df_courses.empty:
-        return ["Nu există cursuri în baza de date."]
+    cursuri_asignate = list(courses_collection.find(
+        {"_id": {"$in": cursuri_asignate_ids}}, {"descriere": 1}
+    ))
+    if not cursuri_asignate:
+        return []
 
-    df_courses["descriere"] = df_courses["descriere"].fillna("")
+    descrieri_asignate = " ".join([c.get("descriere", "") for c in cursuri_asignate])
 
-    vectorizer = TfidfVectorizer()
-    
-    combined_texts = list(df_searches["query"]) + list(df_courses["descriere"])
-    
-    tfidf_matrix = vectorizer.fit_transform(combined_texts)
+    toate_cursurile = list(courses_collection.find({}, {"_id": 1, "descriere": 1, "nume": 1}))
+    if not toate_cursurile:
+        return []
 
-    search_vectors = tfidf_matrix[: len(df_searches)]
-    course_vectors = tfidf_matrix[len(df_searches):]
+    df_cursuri = pd.DataFrame(toate_cursurile)
+    df_cursuri["descriere"] = df_cursuri["descriere"].fillna("")
 
-    similarity_matrix = cosine_similarity(search_vectors, course_vectors)
+    vectorizer = TfidfVectorizer(max_features=1000)
+    vectorizer.fit(df_cursuri["descriere"])
 
-    recommended_courses = set()
+    cursuri_matrix = vectorizer.transform(df_cursuri["descriere"])
+    descriere_vector = vectorizer.transform([descrieri_asignate])
 
-    for i, search in enumerate(df_searches["query"]):
-        top_indices = similarity_matrix[i].argsort()[::-1][:top_n]
-        
-        for idx in top_indices:
-            if similarity_matrix[i][idx] > 0.1:
-                recommended_courses.add(df_courses.iloc[idx]["_id"])
+    cosine_sim = cosine_similarity(descriere_vector, cursuri_matrix).flatten()
 
-    for courses in df_searches["matched_courses"]:
-        recommended_courses.update(courses)
+    df_cursuri["similaritate"] = cosine_sim
+    df_cursuri = df_cursuri[~df_cursuri["_id"].isin(cursuri_asignate_ids)]
 
-    return list(recommended_courses) if recommended_courses else ["Nu s-au găsit cursuri relevante."]
+    top_recomandari = df_cursuri.sort_values("similaritate", ascending=False).head(top_n)
 
-user_id = "6659b89a262fde1750874e1c"  
-recommendations = recomanda_cursuri_pentru_user(user_id)
-print(f"Cursuri recomandate pentru utilizatorul {user_id}: {recommendations}")
+    return [str(cid) for cid in top_recomandari["_id"]]
+
+@app.get("/recommend", response_model=List[str])
+def recommend(user_id: str):
+    return recomanda_top_cursuri(user_id)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("AI:app", host="localhost", port=3001, reload=True)

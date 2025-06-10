@@ -1,4 +1,3 @@
-// lectieController.js
 const { connectToDatabase, closeDatabaseConnection, insertDocument, updateDocument, deleteDocument, searchDocument,deleteMultipleDocuments,getCollection, ObjectId} = require('../mongodb.js');
 const Lectie = require('../Model/lectie.js');
 const { actualizeazaCursLectie } = require('./cursController.js');
@@ -7,10 +6,7 @@ const adaugaLectie = async function (lectie, cursId) {
   let client;
   try {
     client = await connectToDatabase();
-    
-    // Adăugăm lecția în baza de date și obținem ID-ul lecției adăugate
     const insertedLectie = await insertDocument(client, 'lectii', lectie);
-    // Actualizăm cursul pentru a include ID-ul lecției adăugate în lista de lectii
     await actualizeazaCursLectie(client, cursId, insertedLectie);
     return insertedLectie;
   } catch (error) {
@@ -25,9 +21,8 @@ const getLectie = async function (id) {
   let client;
   try {
     client = await connectToDatabase();
-    const filter = { _id: new ObjectId(id) }; // Convertim id-ul într-un obiect ObjectId
-    const result = await searchDocument(client, 'lectii', filter); // Presupunând că colecția se numește 'lectii'
-    //console.log(result); // Afisăm rezultatul căutării înainte de a-l returna (dacă este necesar)
+    const filter = { _id: new ObjectId(id) }; 
+    const result = await searchDocument(client, 'lectii', filter); 
     return result;
   } catch (error) {
     throw error;
@@ -48,7 +43,7 @@ async function cautaArticoleLectie(id) {
    
 
     if (typeof lectie.articole === 'undefined' ) {
-      return []; // Returnează un array gol dacă nu sunt articole
+      return []; 
     }
 
     const articoleIds = lectie.articole.map(articolId => new ObjectId(articolId));
@@ -64,8 +59,6 @@ async function cautaArticoleLectie(id) {
   }
 }
 
-
-// Funcție pentru a căuta ID-ul unei lecții în cursuri
 async function cautaLectieInCursuri(lessonId) {
   let client;
   try {
@@ -98,8 +91,6 @@ const actualizeazaLectieArticol = async function (client, lessonId, articleId) {
   }
 }
 
-
-
 async function actualizeazaLectie(id, lectieActualizata) {
   let client;
   try {
@@ -119,22 +110,16 @@ async function stergeLectie(id) {
   let client;
   try {
     client = await connectToDatabase();
-    const filter = { _id: new ObjectId(id) }; // Convertim id-ul într-un obiect ObjectId
-    
-    // Obținem lectia pentru a accesa lista de articole asociate
+    const filter = { _id: new ObjectId(id) }; 
     const lectieCollection = getCollection(client, 'lectii');
     const lectie = await lectieCollection.findOne(filter);
     
-    // Verificăm dacă lectia există
     if (lectie) {
-      // Ștergem articolele asociate lectiei
       const articoleIds = lectie.articole.map(articolId => new ObjectId(articolId)); // Convertim fiecare ID în ObjectId
       const articoleFilter = { _id: { $in: articoleIds } };
       await deleteMultipleDocuments(client, 'articole', articoleFilter);
       console.log('Articolele asociate lectiei au fost șterse din baza de date.');
     }
-
-    // Ștergem lectia din colecția "lectii"
     const result = await deleteDocument(client, 'lectii', filter);
     console.log('Lectia a fost ștersă din baza de date.');
     return result;
@@ -144,8 +129,6 @@ async function stergeLectie(id) {
     if (client) await closeDatabaseConnection(client);
   }
 }
-
-
 
 async function getLectii() {
   let client;

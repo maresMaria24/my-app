@@ -1,7 +1,7 @@
 
 const { MongoClient, ObjectId } = require('mongodb');
 
-const uri = "mongodb+srv://maresmaria21:vsNcu9JifDcA6sl1@brainit.iuj2zxy.mongodb.net/?retryWrites=true&w=majority&appName=BrainIT";
+const uri = "mongodb+srv://maria:maria22@brainit.iuj2zxy.mongodb.net/?retryWrites=true&w=majority&appName=BrainIT";
 
 async function connectToDatabase() {
   const client = new MongoClient(uri, {
@@ -10,7 +10,6 @@ async function connectToDatabase() {
 
   try {
     await client.connect();
-    // console.log("Conexiunea la baza de date a fost stabilită cu succes!");
     return client;
   } catch (error) {
     console.error("Eroare la conectarea la baza de date:", error);
@@ -21,7 +20,6 @@ async function connectToDatabase() {
 async function closeDatabaseConnection(client) {
   try {
     await client.close();
-    // console.log("Conexiunea la baza de date a fost închisă cu succes!");
   } catch (error) {
     console.error("Eroare la închiderea conexiunii la baza de date:", error);
     throw error;
@@ -79,7 +77,6 @@ async function deleteMultipleDocuments(client, collectionName, filter) {
     throw error;
   }
 }
-
 
 async function searchDocument(client, collectionName, query) {
   try {

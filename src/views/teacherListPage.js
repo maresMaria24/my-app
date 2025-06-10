@@ -16,7 +16,7 @@ function TeacherListPage() {
     if (!isLoggedIn) {
       navigate('/login');
     } else if (user.rol !== 'admin') {
-      navigate('/home'); // Redirect non-admin users
+      navigate('/home');
     } else {
       fetchTeachers();
     }
@@ -27,7 +27,7 @@ function TeacherListPage() {
       const response = await fetch('http://localhost:3001/getTeachers');
       if (response.ok) {
         const data = await response.json();
-        console.log(data); // For debugging
+        console.log(data);
         setTeachers(data);
       } else {
         console.error('Error fetching teachers:', response.status);
@@ -79,6 +79,7 @@ function TeacherListPage() {
       console.error('Error sending confirmation email:', error);
     }
   };
+
   const handleConfirm = async () => {
     try {
       const response = await fetch('http://localhost:3001/updateTeacher', {
@@ -95,7 +96,6 @@ function TeacherListPage() {
             ? { ...teacher, acces: true, rol: 'profesor' }
             : teacher
         ));
-        // Send confirmation email
         await sendConfirmationEmail(selectedTeacher.email, selectedTeacher.utilizator);
         fetchTeachers();
         setShowModal(false);
@@ -106,8 +106,6 @@ function TeacherListPage() {
       console.error('Error confirming teacher:', error);
     }
   };
-
-  
 
   const handleListClick = () => {
     navigate('/TeacherListPage');
@@ -132,15 +130,13 @@ function TeacherListPage() {
       navigate('/login');
     }
   };
-
   if (!isLoggedIn || (user && user.rol !== 'admin')) {
-    return null; // Or a loading spinner, or a message, etc.
+    return null;
   }
-
   return (
     <Container>
       <Card className="my-4 card-custom">
-        <Navbar expand="lg" className="navbar-custom">
+        <Navbar expand="lg" >
           <Container fluid>
             <Navbar.Brand href="#">BrainIT</Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />

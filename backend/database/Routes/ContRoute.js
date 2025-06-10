@@ -71,7 +71,6 @@ router.post('/addTeacher', async (req, res) => {
   
 
 
-// Ruta pentru actualizarea unui cont existent
 router.put('/updateTeacher', async (req, res) => {
     try {
       const id = req.body.id;
@@ -90,7 +89,6 @@ router.put('/updateTeacher', async (req, res) => {
     }
   });
 
-// Ruta pentru ștergerea unui cont
 router.delete('/deleteTeacher', async (req, res) => {
   try {
     const { id } = req.body;
@@ -102,7 +100,6 @@ router.delete('/deleteTeacher', async (req, res) => {
   }
 });
 
-// Ruta pentru obținerea tuturor conturilor
 router.get('/lista', async (req, res) => {
   try {
     const conturi = await getConturi();
@@ -121,7 +118,6 @@ router.get('/getTeachers', async (req, res) => {
     }
 });
   
-// Ruta pentru obținerea unui cont specific după email
 router.get('/detalii/:email', async (req, res) => {
   try {
     const email = req.params.email;

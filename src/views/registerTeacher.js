@@ -8,12 +8,12 @@ function RegisterTeacher() {
   const [password, setPassword] = useState('');
   const [linkCv, setCvLink] = useState('');
   const [registrationMessage, setRegistrationMessage] = useState('');
-  const [submitted, setSubmitted] = useState(false); // Variabilă pentru a controla dacă formularul a fost trimis
+  const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const acces = true; // Setează accesul pe true by default
+    const acces = true; 
     const data = { username, email, password,linkCv }; 
     try {
       const response = await fetch('http://localhost:3001/addTeacher', {
@@ -50,7 +50,7 @@ function RegisterTeacher() {
                 <Col sm={12}>
                   <h1>Pagina de inregistrare profesor</h1>
                   <p>Completeaza formularul de mai jos pentru rolul de profesor:</p>
-                  {!submitted ? ( // Afisam input-urile doar daca formularul nu a fost trimis
+                  {!submitted ? (
                     <Form onSubmit={handleSubmit}>
                       <Form.Group controlId="formBasicUsername">
                         <Form.Label>Nume utilizator</Form.Label>
@@ -101,7 +101,6 @@ function RegisterTeacher() {
                       </Button>
                     </Form>
                   ) : (
-                    // Afisam mesajul de inregistrare daca formularul a fost trimis
                     <p className="text-success">{registrationMessage}</p>
                   )}
                   {registrationMessage && !submitted && (

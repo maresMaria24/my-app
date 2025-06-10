@@ -149,41 +149,43 @@ function Forum() {
   };
 
   if (!isLoggedIn) {
-    return null; // Or a loading spinner, or a message, etc.
+    return null;
   }
-
+  const handleNavigation = (path) => navigate(path);
   return (
     <Container className="forum-page">
       <Card className="my-4 card-custom">
         <Card.Body>
-          <Navbar expand="lg" className="navbar-custom">
-            <Container fluid>
-              <Navbar.Brand href="/home">BrainIT</Navbar.Brand>
-              <Navbar.Toggle aria-controls="navbarScroll" />
-              <Navbar.Collapse id="navbarScroll">
-                <Nav className="me-auto my-2 my-lg-0 navbar-nav-scroll" style={{ maxHeight: '100px' }}>
-                  <Nav.Link className="nav-item nav-link" onClick={handleClassesClick}>Cursuri</Nav.Link>
-                  {user && user.rol === 'admin' && (
-                    <Nav.Link className="nav-item nav-link" onClick={handleListClick}>Cereri profesori</Nav.Link>
-                  )}
-                  <Nav.Link className="nav-item nav-link" onClick={handleForumClick}>Forum</Nav.Link>
-                  <Nav.Link className="nav-item nav-link" onClick={handleProfileClick}>Profilul meu</Nav.Link>
-                </Nav>
-                <Form className="d-flex">
-                  {isLoggedIn ? (
-                    <>
-                      <p className="my-auto me-3">{userEmail}</p>
-                      <Button variant="outline-danger" onClick={handleAuthClick}>Logout</Button>
-                    </>
-                  ) : (
+         <Navbar expand="lg" >
+                <Container fluid>
+                  <Navbar.Brand href="/home">BrainIT</Navbar.Brand>
+                  <Navbar.Toggle aria-controls="navbarScroll" />
+                  <Navbar.Collapse id="navbarScroll">
                     <Nav className="me-auto my-2 my-lg-0 navbar-nav-scroll" style={{ maxHeight: '100px' }}>
-                      <Nav.Link href="/login" active>Login</Nav.Link>
+                      <Nav.Link onClick={() => handleNavigation('/Classes')}>Cursuri</Nav.Link>
+                      {user && user.rol === 'admin' && (
+                        <Nav.Link onClick={() => handleNavigation('/TeacherListPage')}>Cereri profesori</Nav.Link>
+                        
+                      )}
+                        {user && user.rol === 'admin' && (
+                        <Nav.Link onClick={() => handleNavigation('/QuizCheck')}>Teste</Nav.Link>
+                      )}
+                      <Nav.Link onClick={() => handleNavigation('/Forum')}>Forum</Nav.Link>
+                      <Nav.Link onClick={() => handleNavigation('/profile')}>Profilul meu</Nav.Link>
                     </Nav>
-                  )}
-                </Form>
-              </Navbar.Collapse>
-            </Container>
-          </Navbar>
+                    <div className="d-flex">
+                      {isLoggedIn ? (
+                        <>
+                          <p className="my-auto me-3">{userEmail}</p>
+                          <Button variant="outline-danger" onClick={handleAuthClick}>Logout</Button>
+                        </>
+                      ) : (
+                        <Nav.Link href="/login">Login</Nav.Link>
+                      )}
+                    </div>
+                  </Navbar.Collapse>
+                </Container>
+              </Navbar>
         </Card.Body>
       </Card>
       <Row>

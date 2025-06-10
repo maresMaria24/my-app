@@ -5,7 +5,6 @@ class Raspuns {
       this.dataCreare = new Date(); 
     }
   
-    // Method to display details about the answer
     afiseazaDetalii() {
       console.log(`Raspuns: ${this.text}`);
       console.log(`Autor: ${this.autor}`);

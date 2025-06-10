@@ -1,4 +1,3 @@
-// contController.js
 const { connectToDatabase, closeDatabaseConnection, insertDocument, updateDocument, deleteDocument,ObjectId } = require('../mongodb.js');
 const Cont = require('../Model/cont.js');
 
@@ -6,7 +5,7 @@ async function adaugaCont(cont) {
   let client;
   try {
     client = await connectToDatabase();
-    const insertedId = await insertDocument(client, 'conti', cont); // Am schimbat numele colecției în 'conti' pentru a evita conflictul cu cuvântul rezervat 'cont'
+    const insertedId = await insertDocument(client, 'conti', cont); 
     return insertedId;
   } catch (error) {
     throw error;
@@ -21,7 +20,7 @@ async function actualizeazaCont(id, contActualizat) {
     client = await connectToDatabase();
     const filter = { _id: new ObjectId(id) };
     const update = { $set: contActualizat };
-    const result = await updateDocument(client, 'conti', filter, update); // Schimbare similară cu cea de mai sus
+    const result = await updateDocument(client, 'conti', filter, update); 
     return result;
   } catch (error) {
     throw error;
@@ -48,7 +47,7 @@ async function stergeCont(id) {
   try {
     client = await connectToDatabase();
     const filter = { _id: new ObjectId(id) };
-    const result = await deleteDocument(client, 'conti', filter); // Schimbare similară cu cea de mai sus
+    const result = await deleteDocument(client, 'conti', filter);
     return result;
   } catch (error) {
     throw error;
@@ -61,7 +60,7 @@ async function getConturi() {
   let client;
   try {
     client = await connectToDatabase();
-    const collection = client.db().collection('conti'); // Schimbare similară cu cea de mai sus
+    const collection = client.db().collection('conti'); 
     const cursor = collection.find({});
     const conturi = await cursor.toArray();
     return conturi;
@@ -75,8 +74,8 @@ async function getConturiTeachers() {
   let client;
   try {
     client = await connectToDatabase();
-    const collection = client.db().collection('conti'); // Schimbare similară cu cea de mai sus
-    const cursor = collection.find({ acces: false }); // Filtru pentru acces = false
+    const collection = client.db().collection('conti'); 
+    const cursor = collection.find({ acces: false }); 
     const conturi = await cursor.toArray();
     return conturi;
   } catch (error) {

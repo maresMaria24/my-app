@@ -22,6 +22,8 @@ import RegisterTeacher from './views/registerTeacher';
 import TeacherListPage from './views/teacherListPage';
 import PrivateRoute from './PrivateRoute';
 import { AuthProvider } from './AuthContext';
+import Quiz from './views/quiz';
+import QuizCheck from './views/quizCheck';
 
 const root = createRoot(document.getElementById('root'));
 
@@ -43,6 +45,8 @@ root.render(
             <Route path="/RegisterTeacher" element={<RegisterTeacher />} />
             <Route path="/TeacherListPage" element={<TeacherListPage />} />
             <Route path="/discussion/:id" element={<Discussion />} />
+            <Route path="/quiz/:id" element={<Quiz />} />
+            <Route path="/quizCheck" element={<QuizCheck />} />
           </Routes>
         </div>
       </Router>

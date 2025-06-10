@@ -10,16 +10,14 @@ router.use(bodyParser.json());
 router.post('/confirmare', async (req, res) => {
   const { email, name } = req.body;
     console.log("ACI");
-  // Create a transporter
   const transporter = nodemailer.createTransport({
-    service: 'gmail', // You can use other email services
+    service: 'gmail',
     auth: {
-      user: 'brainitonline@gmail.com', // Your email
-      pass: 'uzxx jhpy afir febm', // Your email password
+      user: 'brainitonline@gmail.com',
+      pass: 'uzxx jhpy afir febm',
     },
   });
 
-  // Email options
   const mailOptions = {
     from: 'brainitonline@gmail.com',
     to: email,
@@ -28,7 +26,6 @@ router.post('/confirmare', async (req, res) => {
   };
 
   try {
-    // Send the email
     await transporter.sendMail(mailOptions);
     res.status(200).send('Confirmation email sent successfully!');
   } catch (error) {
